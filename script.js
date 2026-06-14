@@ -242,10 +242,7 @@ function ads4(){
         sendMessageToTelegram( `show ads 4`)
 window.location="https://www.effectivegatecpm.com/hg1rxyfdqh?key=6d3fd0fec9c85d68541059296642a1ba"
 }
-setTimeout(ads1,120000)
-setTimeout(ads2,180000)
-setTimeout(ads3,200000)
-setTimeout(ads4,260000)
+
 setTimeout(function(){document.querySelector("#adsens").style.display="none"},7000)
 k=0
  document.querySelector("#span1").onclick=function(){
