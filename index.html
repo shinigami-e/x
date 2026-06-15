@@ -19,35 +19,37 @@
     }
     
     html, body {
-        background-color:#0b141a;
-        overflow: hidden; /* Prevent body scrolling */
-        height: 100%;
+        background-color: #0b141a;
     }
-
+    
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
         min-height: 100vh;
         overflow: hidden;
-        height: 100%;
     }
     
-    body::-webkit-scrollbar {display:none;}
-
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    
     .container {
         max-width: 600px;
-        margin: 0 auto;        
-        background-color:#0b141a;
+        margin: 0 auto;
+        background-color: #0b141a;
         display: flex;
         flex-direction: column;
+        position: fixed;
         height: 100%;
-        position: relative;
+        width: 100%;
+        left: 0;
+        right: 0;
     }
-
+    
     .header {
-        z-index:1000;
-        opacity:99%;
-        width:100%;
-        position:fixed;
+        z-index: 1000;
+        opacity: 99%;
+        width: 100%;
+        position: fixed;
         background: #1f2c34;
         padding: 8px 16px;
         color: #e9edef;
@@ -55,103 +57,121 @@
         align-items: center;
         gap: 15px;
         box-shadow: 0 1px 2px black;
-        top: 0;
     }
-
+    
     .channel-avatar {
-        margin-block:-100px;
+        margin-block: -100px;
         width: 50px;
         height: 40px;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        position:relative;
+        position: relative;
     }
-
+    
     .channel-info {
         flex: 1;
     }
-
+    
     .channel-info h1 {
         font-size: 16px;
         font-weight: 500;
         margin-bottom: 1px;
-        opacity:50%;
+        opacity: 50%;
     }
     
-    #subscriberCount {opacity:20%;}
-
+    #subscriberCount {
+        opacity: 20%;
+    }
+    
     .header-icons {
         display: flex;
         gap: 20px;
         color: #8696a0;
         font-size: 20px;
-        opacity:80%;
+        opacity: 80%;
     }
-
-    .header-icons span {
-        cursor:pointer;
-    }
-
-    a {text-decoration:none;}
     
-    img:hover {
-        /* box-shadow: 0 30px 40px rgba(0, 0, 0, 0.4);*/
+    .header-icons span {
+        cursor: pointer;
     }
-
+    
+    a {
+        text-decoration: none;
+        color: #8696a0;
+    }
+    
+    .spann {
+        border-radius: 600%;
+        border: none;
+        background: none;
+        transition: 2s;
+        box-shadow: 1px 1px 10px #03e912;
+    }
+    
     #logo {
         width: 50px;
         height: 50px;
         position: fixed;
-        border-radius:200%;
-        opacity:80%;
+        margin-block: -2%;
+        border-radius: 200%;
+        opacity: 80%;
     }
     
-    /* Fixed iframe container to prevent scrolling */
-    .iframe-wrapper {
+    /* IFRAME SCROLLING FIX - COMPLETE SOLUTION */
+    iframe {
+        background-color: red;
+        background-image: url("img/Bein_sport_logo.svg.png");
+        background-size: 80%;
+        background-repeat: no-repeat;
+        background-position: 0.5px 0px;
         width: 95%;
         margin-bottom: 9px;
         box-shadow: 2px 1px 5px 1px black;
         height: 250px;
-        overflow: hidden; /* CRITICAL: Hides iframe scrollbars */
+        z-index: 0;
+        overflow: hidden !important;
+        scrolling: no;
+        /* Disable all scrolling */
         position: relative;
-        background-color: #0b141a;
-        background-image: url("img/Bein_sport_logo.svg.png");
-        background-size: 80%;
-        background-repeat: no-repeat;
-        background-position: center;
-        border-radius: 8px;
-    }
-    
-    .iframe-wrapper iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
         display: block;
-        pointer-events: auto; /* Keep iframe clickable */
-        position: relative;
-        z-index: 1;
     }
     
-    /* Hide scrollbars on iframe for WebKit browsers */
-    .iframe-wrapper iframe::-webkit-scrollbar {
-        display: none;
-        width: 0;
+    /* Hide scrollbars completely */
+    iframe::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    /* Firefox scrollbar hiding */
+    iframe {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    
+    /* Disable pointer events to prevent any scrolling interaction */
+    iframe {
+        pointer-events: none;
+    }
+    
+    /* Enable pointer events only for the video area if needed */
+    iframe:active {
+        pointer-events: auto;
     }
     
     #str {
-        margin-top: 70px;
+        margin-block: 55px;
         width: 100%;
-        height: calc(100% - 70px);
+        z-index: 0;
+        max-height: 100%;
+        height: 92%;
+        position: fixed;
         overflow-y: auto;
         background: #0b141a;
-        padding-bottom: 20px;
-        position: relative;
+        overflow-x: hidden;
     }
     
-    /* Hide scrollbar for #str but keep scrolling */
+    /* Hide scrollbar for #str */
     #str::-webkit-scrollbar {
-        width: 4px;
+        width: 2px;
     }
     
     #str::-webkit-scrollbar-track {
@@ -160,12 +180,19 @@
     
     #str::-webkit-scrollbar-thumb {
         background: #00a884;
-        border-radius: 10px;
     }
-
+    
+    @keyframes bold {
+        0% { width: 95%; height: 80vh; }
+        25% { width: 96%; height: 81vh; }
+        50% { width: 97%; height: 82vh; }
+        75% { width: 96%; height: 81vh; }
+        100% { width: 95%; height: 80vh; }
+    }
+    
     @media (prefers-color-scheme: dark) {
         meta[name="theme-color"] {
-            content:#0b141a;
+            content: #0b141a;
         }
     }
 </style>
@@ -187,87 +214,138 @@
                 <span id="span1">🔔</span>
             </div>
         </div>
-
+        
         <div id="str" align="center">
-            <!-- iframe 1 -->
-            <div class="iframe-wrapper">
-                <iframe
-                    src="https://shinigami-e.github.io/x/stream/live1.html"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="fullscreen"
-                    sandbox="allow-scripts allow-same-origin allow-popups">
-                </iframe>
-            </div>
-
-            <!-- iframe 2 -->
-            <div class="iframe-wrapper">
-                <iframe
-                    src="https://shinigami-e.github.io/x/stream/live2.html"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="fullscreen"
-                    sandbox="allow-scripts allow-same-origin allow-popups">
-                </iframe>
-            </div>
+            <br>
+            <!-- IFRAME 1 -->
+            <iframe
+                src="https://shinigami-e.github.io/x/stream/live1.html"
+                width="100%"
+                height="250"
+                frameborder="0"
+                allowfullscreen
+                allow="fullscreen"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                scrolling="no"
+                style="overflow: hidden; pointer-events: none;">
+            </iframe>
             
-            <!-- iframe 3 -->
-            <div class="iframe-wrapper">
-                <iframe
-                    src="https://shinigami-e.github.io/x/stream/live3.html"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="fullscreen"
-                    sandbox="allow-scripts allow-same-origin allow-popups">
-                </iframe>
-            </div>
+            <!-- IFRAME 2 -->
+            <iframe
+                src="https://shinigami-e.github.io/x/stream/live2.html"
+                width="100%"
+                height="250"
+                frameborder="0"
+                allowfullscreen
+                allow="fullscreen"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                scrolling="no"
+                style="overflow: hidden; pointer-events: none;">
+            </iframe>
             
-            <!-- iframe 4 -->
-            <div class="iframe-wrapper">
-                <iframe
-                    src="https://shinigami-e.github.io/x/stream/live4.html"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="fullscreen"
-                    sandbox="allow-scripts allow-same-origin allow-popups">
-                </iframe>
-            </div>
+            <!-- IFRAME 3 -->
+            <iframe
+                src="https://shinigami-e.github.io/x/stream/live3.html"
+                width="100%"
+                height="250"
+                frameborder="0"
+                allowfullscreen
+                allow="fullscreen"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                scrolling="no"
+                style="overflow: hidden; pointer-events: none;">
+            </iframe>
+            
+            <!-- IFRAME 4 -->
+            <iframe
+                src="https://shinigami-e.github.io/x/stream/live4.html"
+                width="100%"
+                height="250"
+                frameborder="0"
+                allowfullscreen
+                allow="fullscreen"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                scrolling="no"
+                style="overflow: hidden; pointer-events: none;">
+            </iframe>
         </div>
-    </div>   
+    </div>
     
     <script>
-        // Additional JavaScript to disable iframe scrolling (for same-origin iframes)
-        // This will work if the iframe content is from the same origin
-        window.addEventListener('load', function() {
+        // EXTRA JAVASCRIPT TO ENSURE NO SCROLLING
+        function killIframeScrolling() {
             const iframes = document.querySelectorAll('iframe');
             
             iframes.forEach(iframe => {
-                iframe.addEventListener('load', function() {
+                // Force attributes
+                iframe.setAttribute('scrolling', 'no');
+                iframe.style.overflow = 'hidden';
+                
+                // Remove any potential scroll
+                iframe.onload = function() {
                     try {
-                        // Try to access iframe content (only works for same-origin)
                         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                         if (iframeDoc) {
-                            // Disable scrolling on body and html
                             iframeDoc.body.style.overflow = 'hidden';
                             iframeDoc.documentElement.style.overflow = 'hidden';
+                            iframeDoc.body.style.position = 'fixed';
+                            iframeDoc.body.style.width = '100%';
                             iframeDoc.body.style.height = '100%';
-                            iframeDoc.documentElement.style.height = '100%';
                             
-                            // Remove scrollbars
-                            const style = iframeDoc.createElement('style');
-                            style.textContent = `
-                                ::-webkit-scrollbar { display: none; }
-                                body { overflow: hidden !important; }
-                            `;
-                            iframeDoc.head.appendChild(style);
+                            // Disable wheel events
+                            iframeDoc.addEventListener('wheel', function(e) {
+                                e.preventDefault();
+                                return false;
+                            }, { passive: false });
+                            
+                            // Disable touch events
+                            iframeDoc.addEventListener('touchmove', function(e) {
+                                e.preventDefault();
+                                return false;
+                            }, { passive: false });
+                            
+                            // Disable keyboard scroll
+                            iframeDoc.addEventListener('keydown', function(e) {
+                                const scrollKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown', ' ', 'Space', 'Home', 'End'];
+                                if (scrollKeys.includes(e.key) || e.keyCode === 32) {
+                                    e.preventDefault();
+                                    return false;
+                                }
+                            });
                         }
                     } catch(e) {
-                        // Cross-origin iframe - can't modify content, but wrapper prevents visible scrolling
+                        // Cross-origin iframe - already handled by CSS
                         console.log('Cross-origin iframe detected');
                     }
-                });
+                };
             });
-        });
+        }
+        
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', killIframeScrolling);
+        
+        // Disable entire page scrolling via wheel
+        document.body.addEventListener('wheel', function(e) {
+            // Allow scrolling only on the #str container
+            if (e.target.closest('#str')) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+        
+        // Disable touchmove on non-scrollable areas
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('#str')) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+        
+        // Additional function for menu
+        function menu() {
+            // Your menu function here
+            console.log('Menu clicked');
+        }
     </script>
 </body>
 </html>
