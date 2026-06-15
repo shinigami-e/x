@@ -3,354 +3,246 @@
 <head>
 <meta name="google" content="notranslate">
 <meta name="theme-color" content="#1f2c34">
-<meta name="msapplication-TileColor" content="#3498db">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#1f2c34">
+  <meta name="msapplication-TileColor" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#1f2c34">
 <link rel="icon" type="image/x-icon" href="img/images__1_-removebg-preview.png">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kora-live</title>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    html, body {
-        background-color: #0b141a;
-        height: 100%;
-        overflow: hidden;
-    }
-    
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-        min-height: 100vh;
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-    }
-    
-    body::-webkit-scrollbar {
-        display: none;
-    }
-    
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #0b141a;
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        left: 0;
-        right: 0;
-        top: 0;
-    }
-    
-    .header {
-        z-index: 1000;
-        opacity: 99%;
-        width: 100%;
-        position: fixed;
-        background: #1f2c34;
-        padding: 8px 16px;
-        color: #e9edef;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 1px 2px black;
-        top: 0;
-    }
-    
-    .channel-avatar {
-        margin-block: -100px;
-        width: 50px;
-        height: 40px;
-        position: relative;
-    }
-    
-    .channel-info {
-        flex: 1;
-    }
-    
-    .channel-info h1 {
-        font-size: 16px;
-        font-weight: 500;
-        margin-bottom: 1px;
-        opacity: 50%;
-    }
-    
-    #subscriberCount {
-        opacity: 20%;
-    }
-    
-    .header-icons {
-        display: flex;
-        gap: 20px;
-        color: #8696a0;
-        font-size: 20px;
-        opacity: 80%;
-    }
-    
-    .header-icons span {
-        cursor: pointer;
-    }
-    
-    a {
-        text-decoration: none;
-        color: #8696a0;
-    }
-    
-    #logo {
-        width: 50px;
-        height: 50px;
-        position: fixed;
-        margin-block: -2%;
-        border-radius: 200%;
-        opacity: 80%;
-    }
-    
-    /* IFRAME STYLES - NO SCROLLING BUT FULLSCREEN ALLOWED */
-    iframe {
-        background-color: red;
-        background-image: url("img/Bein_sport_logo.svg.png");
-        background-size: 80%;
-        background-repeat: no-repeat;
-        background-position: 0.5px 0px;
-        width: 95%;
-        margin-bottom: 9px;
-        box-shadow: 2px 1px 5px 1px black;
-        height: 250px;
-        z-index: 0;
-        overflow: hidden !important;
-        display: block;
-        border: none;
-        position: relative;
-    }
-    
-    /* Hide scrollbars completely */
-    iframe::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-    }
-    
-    /* Firefox scrollbar hiding */
-    iframe {
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-    }
-    
-    /* Enable pointer events for interaction but prevent scrolling */
-    iframe {
-        pointer-events: auto;
-    }
-    
-    #str {
-        margin-block: 55px;
-        width: 100%;
-        z-index: 0;
-        max-height: calc(100% - 55px);
-        height: auto;
-        position: absolute;
-        overflow-y: auto;
-        background: #0b141a;
-        overflow-x: hidden;
-        top: 0;
-        bottom: 0;
-    }
-    
-    /* Custom scrollbar for #str */
-    #str::-webkit-scrollbar {
-        width: 0px;
-    }
-    
-    #str::-webkit-scrollbar-track {
-        background:none;
-    }
-    
-    #str::-webkit-scrollbar-thumb {
-        background:none;
-        border-radius: 0px;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        meta[name="theme-color"] {
-            content: #0b141a;
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kora-live</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+html, body {
+    background-color:#0b141a;
+}
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: ;
+            min-height: 100vh;
+
+        }
+        body::-webkit-scrollbar {display:none;}
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;        
+            background-color:#0b141a;
+            display: flex;
+            flex-direction: column;
+            position:fixed;
+            height:100%;
+        }
+
+        .header {
+      
+        z-index:1000;
+        opacity:99%;
+        width:100%;
+        position:fixed;
+            background: #1f2c34;
+            padding: 8px 16px;
+            color: #e9edef;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 1px 2px black;
+        }
+
+
+
+        .channel-avatar {
+        margin-block:-100px;
+            width: 50px;
+            height: 40px;
+         /*   background: linear-gradient(135deg, #00a884 0%, #00755c 100%);*/
+            border-radius: 50%;
+            display:;
+            align-items: center;
+            justify-content: center;
+            font-size:;
+            position:relative;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-info h1 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 1px;
+            opacity:50%;
+        }
+#subscriberCount {opacity:20%;}
+
+        .header-icons {
+            display: flex;
+            gap: 20px;
+            color: #8696a0;
+            font-size: 20px;
+      opacity:80%;
+        }
+
+        .header-icons span {
+            cursor:none;
+            
+        }
+
+
+
+    a {text-decoration:none;}
+        img:hover {
+      /*  box-shadow: 0 30px 40px rgba(0, 0, 0, 0.4);*/
+        }
+
+        .spann { border-radius:600%;border:none;background:none;transition:2s;box-shadow: 1px 1px 10px #03e912;}
+        .spannn{transition:3s;box-shadow:;}
+     
+img {transition:3;}
+        #logo {width: 50px;
+        height: 50px;
+        background-attachment:scroll;
+        position: fixed;
+        margin-block:-2%;
+        margin-block:;
+        border-radius:200%;
+        opacity:80%;}
+iframe  { background-color:red;background-image:url("img/Bein_sport_logo.svg.png");background-size:80%;background-repeat:no-repeat;background-position:0.5px 0px;width:95%;margin-bottom:9px;box-shadow:2px 1px 5px 1px black ;height:250px;z-index:0;padding-block:-20px;}
+  #str {margin-block:55px;width:100%;z-index:0;max-height:100%;height:92%;position:fixed;overflow-y:auto; background: #0b141a;}
+
+/* NEW STYLES FOR IFRAME OVERLAY */
+.iframe-wrapper {
+    position: relative;
+    width: 95%;
+    margin-bottom: 9px;
+    display: inline-block;
+}
+
+.iframe-wrapper iframe {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 0;
+    box-shadow: 2px 1px 5px 1px black;
+    z-index: 0;
+    padding-block: -20px;
+    background-color: red;
+    background-image: url("img/Bein_sport_logo.svg.png");
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: 0.5px 0px;
+    display: block;
+    pointer-events: none;
+}
+
+.iframe-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    cursor: default;
+    background: transparent;
+}
+/* END NEW STYLES */
+
+/*#adsens {cursor:none;pointer-events:none;left:2.5%;height:80vh;margin-block:10px;z-index:8;position:fixed;animation:bold 1s infinite;}
+*/@keyframes bold{
+0%{width:95%;height:80vh;}
+25%{width:96%;height:81vh;}
+50%{width:97%;height:82vh;}
+75%{width:96%;height:81vh;}
+100%{width:95%;height:80vh;}
+}
+@media (prefers-color-scheme: dark) {
+    meta[name="theme-color"] {
+        content:#0b141a;
     }
-</style>
+}
+
+    </style>
 </head>
-<body>
+<body  >
     <div class="container">
-        <div class="header" id="headers">
-            <div class="channel-avatar" onclick="menu()">
-                <img src="img/images__1_-removebg-preview.png" width="50px" id="logo">
-            </div>
+        <div class="header" id="headers" >
+      
+            <div class="channel-avatar" onclick="menu()"><img src="img/images__1_-removebg-preview.png" width="50px" id="logo"  ></div>
             <div class="channel-info">
                 <h1>Kora-live</h1>
                 <p id="subscriberCount">19.8K</p>
             </div>
             <div class="header-icons">
-                <a href="https://wa.me/?text=install kora live by the link : https://kora-live.page.gd/update.html">
-                    <span>🔗</span>
-                </a>
-                <span id="span1">🔔</span>
+              <a href="https://wa.me/?text= https://wa.me/?text= install kora live by the link : https://kora-live.page.gd/update.html"  >  <span onclick="">🔗</span></a>
+                <span  id="span1" >🔔</span>
             </div>
         </div>
-        
-        <div id="str" align="center">
-            <br>
-            <!-- IFRAME 1 - NO SCROLLING, FULLSCREEN ENABLED -->
-            <iframe
-                src="https://shinigami-e.github.io/x/stream/live1.html"
-                width="95%"
-                height="250"
-                frameborder="0"
-                allowfullscreen
-                allow="fullscreen; autoplay; encrypted-media"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-fullscreen"
-                scrolling="no"
-                style="overflow: hidden;">
-            </iframe>
-            
-            <!-- IFRAME 2 - NO SCROLLING, FULLSCREEN ENABLED -->
-            <iframe
-                src="https://shinigami-e.github.io/x/stream/live2.html"
-                width="95%"
-                height="250"
-                frameborder="0"
-                allowfullscreen
-                allow="fullscreen; autoplay; encrypted-media"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-fullscreen"
-                scrolling="no"
-                style="overflow: hidden;">
-            </iframe>
-            
-            <!-- IFRAME 3 - NO SCROLLING, FULLSCREEN ENABLED -->
-            <iframe
-                src="https://shinigami-e.github.io/x/stream/live3.html"
-                width="95%"
-                height="250"
-                frameborder="0"
-                allowfullscreen
-                allow="fullscreen; autoplay; encrypted-media"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-fullscreen"
-                scrolling="no"
-                style="overflow: hidden;">
-            </iframe>
-            
-            <!-- IFRAME 4 - NO SCROLLING, FULLSCREEN ENABLED -->
-            <iframe
-                src="https://shinigami-e.github.io/x/stream/live4.html"
-                width="95%"
-                height="250"
-                frameborder="0"
-                allowfullscreen
-                allow="fullscreen; autoplay; encrypted-media"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-fullscreen"
-                scrolling="no"
-                style="overflow: hidden;">
-            </iframe>
-        </div>
-    </div>
-    
-    <script>
-        // DISABLE IFRAME SCROLLING BUT KEEP FULLSCREEN
-        function disableIframeScrolling() {
-            const iframes = document.querySelectorAll('iframe');
-            
-            iframes.forEach(iframe => {
-                // Force no scrolling attribute
-                iframe.setAttribute('scrolling', 'no');
-                iframe.style.overflow = 'hidden';
-                
-                // Remove any scroll from iframe content
-                iframe.onload = function() {
-                    try {
-                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        if (iframeDoc) {
-                            // Disable scrolling on body and html
-                            iframeDoc.body.style.overflow = 'hidden';
-                            iframeDoc.documentElement.style.overflow = 'hidden';
-                            iframeDoc.body.style.position = 'relative';
-                            iframeDoc.body.style.height = '100%';
-                            
-                            // Disable scroll events inside iframe
-                            iframeDoc.addEventListener('wheel', function(e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            }, { passive: false });
-                            
-                            iframeDoc.addEventListener('touchmove', function(e) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            }, { passive: false });
-                            
-                            // Disable keyboard scroll
-                            iframeDoc.addEventListener('keydown', function(e) {
-                                const scrollKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown', ' ', 'Space', 'Home', 'End'];
-                                if (scrollKeys.includes(e.key) || e.keyCode === 32) {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    return false;
-                                }
-                            });
-                        }
-                    } catch(e) {
-                        // Cross-origin iframe - can't modify content, but CSS handles it
-                        console.log('Cross-origin iframe (fullscreen still works)');
-                    }
-                };
-                
-                // Trigger load if already loaded
-                if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                    iframe.onload();
-                }
-            });
-        }
-        
-        // Run when page loads
-        document.addEventListener('DOMContentLoaded', disableIframeScrolling);
-        
-        // Allow fullscreen button to work
-        function allowFullscreen() {
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('allow', 'fullscreen; autoplay; encrypted-media');
-            });
-        }
-        
-        // Prevent page scroll when using arrow keys
-        window.addEventListener('keydown', function(e) {
-            const keys = [32, 33, 34, 35, 36, 37, 38, 39, 40];
-            if (keys.includes(e.keyCode)) {
-                if (!e.target.closest('iframe')) {
-                    e.preventDefault();
-                }
-            }
-        });
-        
-        // Menu function
-        function menu() {
-            console.log('Menu clicked');
-            // Add your menu functionality here
-        }
-        
-        // Optional: Handle fullscreen change events
-        document.addEventListener('fullscreenchange', function() {
-            if (document.fullscreenElement) {
-                console.log('Entered fullscreen mode');
-            } else {
-                console.log('Exited fullscreen mode');
-            }
-        });
-    </script>
+
+<div id="str" align="center" >
+  <!----------1---------<img src="img/1000085802-01.jpeg"  id="adsens">----->
+<br><!----------1-------------->
+<div class="iframe-wrapper">
+    <iframe
+      src="https://shinigami-e.github.io/x/stream/live1.html"
+      frameborder="0"
+      allowfullscreen
+      allow="fullscreen"
+      sandbox="allow-scripts allow-same-origin"
+      scrolling="no">
+    </iframe>
+    <div class="iframe-overlay"></div>
+</div>
+
+<!-----------2------------->
+<div class="iframe-wrapper">
+    <iframe
+      src="https://shinigami-e.github.io/x/stream/live2.html"
+      frameborder="0"
+      allowfullscreen
+      allow="fullscreen"
+      sandbox="allow-scripts allow-same-origin"
+      scrolling="no">
+    </iframe>
+    <div class="iframe-overlay"></div>
+</div>
+
+<!-----------3------------->
+<div class="iframe-wrapper">
+    <iframe
+      src="https://shinigami-e.github.io/x/stream/live3.html"
+      frameborder="0"
+      allowfullscreen
+      allow="fullscreen"
+      sandbox="allow-scripts allow-same-origin"
+      scrolling="no">
+    </iframe>
+    <div class="iframe-overlay"></div>
+</div>
+
+<!-----------4------------->
+<div class="iframe-wrapper">
+    <iframe
+      src="https://shinigami-e.github.io/x/stream/live4.html"
+      frameborder="0"
+      allowfullscreen
+      allow="fullscreen"
+      sandbox="allow-scripts allow-same-origin" 
+      scrolling="no">
+    </iframe>
+    <div class="iframe-overlay"></div>
+</div>
+<!----------5-------------->
+
+<!---------fin--------------->    
+</div></div>   
+        <script src="script.js"></script>
+   
+
 </body>
 </html>
