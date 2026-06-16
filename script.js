@@ -258,158 +258,45 @@ showSlidingBar(`active at ${formatTime()}`)
  }
  }
 
-// ======== AJOUT SIMPLE: CONTRÔLES POUR CHAQUE IFRAME ========
+// ======== AJOUT: ARRETER TOUTES LES VIDEOS DANS LES IFRAMES ========
 
-// Fonction simple pour ajouter des contrôles à chaque iframe
-function ajouterControlesIframe() {
-    // Récupérer tous les iframes
-    var iframes = document.querySelectorAll('iframe');
-    
-    if (iframes.length === 0) {
-        return;
-    }
-    
-    // Pour chaque iframe
-    iframes.forEach(function(iframe, index) {
-        // Créer le conteneur de contrôles
-        var controls = document.createElement('div');
-        controls.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
-            border-radius: 30px;
-            backdrop-filter: blur(5px);
-            pointer-events: none;
-        `;
+// Fonction pour arrêter toutes les vidéos dans les iframes
+function arreterToutesLesVideos() {
+    try {
+        var iframes = document.querySelectorAll('iframe');
         
-        // Créer les boutons
-        var play = document.createElement('button');
-        play.textContent = '▶';
-        play.style.cssText = `
-            padding: 8px 16px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            pointer-events: auto;
-            transition: 0.3s;
-        `;
-        
-        var pause = document.createElement('button');
-        pause.textContent = '⏸';
-        pause.style.cssText = `
-            padding: 8px 16px;
-            background: #FF9800;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            pointer-events: auto;
-            transition: 0.3s;
-        `;
-        
-        var stop = document.createElement('button');
-        stop.textContent = '⏹';
-        stop.style.cssText = `
-            padding: 8px 16px;
-            background: #f44336;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            pointer-events: auto;
-            transition: 0.3s;
-        `;
-        
-        // Effets hover
-        play.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
-        play.onmouseout = function() { this.style.transform = 'scale(1)'; };
-        pause.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
-        pause.onmouseout = function() { this.style.transform = 'scale(1)'; };
-        stop.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
-        stop.onmouseout = function() { this.style.transform = 'scale(1)'; };
-        
-        // Rendre le parent de l'iframe relatif
-        if (iframe.parentElement) {
-            iframe.parentElement.style.position = 'relative';
+        if (iframes.length === 0) {
+            return;
         }
         
-        // Ajouter les contrôles
-        controls.appendChild(play);
-        controls.appendChild(pause);
-        controls.appendChild(stop);
-        
-        // Ajouter après l'iframe
-        iframe.parentNode.insertBefore(controls, iframe.nextSibling);
-        
-        // Fonction pour obtenir la vidéo
-        function getVideo() {
+        iframes.forEach(function(iframe, index) {
             try {
-                return iframe.contentDocument?.querySelector('video') || null;
+                var video = iframe.contentDocument?.querySelector('video');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                }
             } catch(e) {
-                return null;
+                // Ignorer les erreurs de cross-origin
             }
-        }
-        
-        // Actions
-        play.onclick = function() {
-            var video = getVideo();
-            if (video) {
-                video.play();
-                showSlidingBar('▶ Iframe ' + (index+1) + ' en lecture');
-            }
-        };
-        
-        pause.onclick = function() {
-            var video = getVideo();
-            if (video) {
-                video.pause();
-                showSlidingBar('⏸ Iframe ' + (index+1) + ' en pause');
-            }
-        };
-        
-        stop.onclick = function() {
-            var video = getVideo();
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-                showSlidingBar('⏹ Iframe ' + (index+1) + ' arrêté');
-            }
-        };
-        
-        // Arrêter la vidéo au chargement
-        setTimeout(function() {
-            var video = getVideo();
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-            }
-        }, 1000);
-    });
+        });
+    } catch(e) {
+        // Ignorer les erreurs
+    }
 }
 
-// Exécuter après le chargement de la page
+// Exécuter au chargement de la page
+function init() {
+    // Attendre un peu que les iframes chargent
+    setTimeout(arreterToutesLesVideos, 1000);
+    setTimeout(arreterToutesLesVideos, 2000);
+    setTimeout(arreterToutesLesVideos, 3000);
+    setTimeout(arreterToutesLesVideos, 5000);
+}
+
+// Lancer quand la page est prête
 if (document.readyState === 'complete') {
-    setTimeout(ajouterControlesIframe, 500);
+    init();
 } else {
-    window.addEventListener('load', function() {
-        setTimeout(ajouterControlesIframe, 500);
-    });
+    window.addEventListener('load', init);
 }
-
-// Réessayer après 2 secondes
-setTimeout(ajouterControlesIframe, 2000);
-setTimeout(ajouterControlesIframe, 4000);
