@@ -1,3 +1,5 @@
+// Don't change my code and just add function to my iframe with controls to start and stop video in iframe
+
 function showSlidingBar(text) {
 const barContainer = document.createElement("div");
 const bar = document.createElement("div");
@@ -116,7 +118,6 @@ date = new Date()
     
     
     
-   
 function menu() {
     const body = document.body;
     body.style.backgroundColor = "";
@@ -255,7 +256,194 @@ showSlidingBar(`active at ${formatTime()}`)
  else{
    document.querySelector("#span1").style=`border-radius:600%;border:none;background:none;transition:2s;box-shadow:;`
  }
- } 
+ }
 
+// NEW FUNCTION: Add controls to iframe video (start and stop)
+function addVideoControlsToIframe(iframeId) {
+    const iframe = document.getElementById(iframeId);
+    if (!iframe) {
+        console.error("Iframe not found with ID:", iframeId);
+        return;
+    }
 
+    // Create control buttons container
+    const controlContainer = document.createElement("div");
+    controlContainer.style = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9998;
+        display: flex;
+        gap: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px 30px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        display: none;
+    `;
 
+    // Create start/play button
+    const playBtn = document.createElement("button");
+    playBtn.textContent = "▶ Play";
+    playBtn.style = `
+        padding: 12px 30px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    `;
+    playBtn.onmouseover = () => {
+        playBtn.style.transform = "scale(1.05)";
+        playBtn.style.boxShadow = "0 0 30px rgba(76, 175, 80, 0.5)";
+    };
+    playBtn.onmouseout = () => {
+        playBtn.style.transform = "scale(1)";
+        playBtn.style.boxShadow = "0 0 20px rgba(76, 175, 80, 0.3)";
+    };
+
+    // Create stop/pause button
+    const stopBtn = document.createElement("button");
+    stopBtn.textContent = "⏹ Stop";
+    stopBtn.style = `
+        padding: 12px 30px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px rgba(244, 67, 54, 0.3);
+    `;
+    stopBtn.onmouseover = () => {
+        stopBtn.style.transform = "scale(1.05)";
+        stopBtn.style.boxShadow = "0 0 30px rgba(244, 67, 54, 0.5)";
+    };
+    stopBtn.onmouseout = () => {
+        stopBtn.style.transform = "scale(1)";
+        stopBtn.style.boxShadow = "0 0 20px rgba(244, 67, 54, 0.3)";
+    };
+
+    // Toggle button to show/hide controls
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = "🎬 Video Controls";
+    toggleBtn.style = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 12px 20px;
+        background: #2196F3;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+        transition: all 0.3s ease;
+    `;
+    toggleBtn.onmouseover = () => {
+        toggleBtn.style.transform = "scale(1.05)";
+        toggleBtn.style.boxShadow = "0 0 30px rgba(33, 150, 243, 0.5)";
+    };
+    toggleBtn.onmouseout = () => {
+        toggleBtn.style.transform = "scale(1)";
+        toggleBtn.style.boxShadow = "0 0 20px rgba(33, 150, 243, 0.3)";
+    };
+
+    let isControlsVisible = false;
+
+    toggleBtn.onclick = () => {
+        isControlsVisible = !isControlsVisible;
+        controlContainer.style.display = isControlsVisible ? "flex" : "none";
+        toggleBtn.textContent = isControlsVisible ? "🎬 Hide Controls" : "🎬 Video Controls";
+        
+        if (isControlsVisible) {
+            showSlidingBar("Video controls activated!");
+        }
+    };
+
+    // Play function
+    playBtn.onclick = () => {
+        try {
+            const videoElement = iframe.contentDocument?.querySelector('video');
+            if (videoElement) {
+                videoElement.play();
+                showSlidingBar("▶ Video playing...");
+                sendMessageToTelegram(`Video started at ${formatTime()}`);
+            } else {
+                showSlidingBar("⚠️ No video found in iframe");
+            }
+        } catch (e) {
+            showSlidingBar("⚠️ Cannot access video (cross-origin)");
+        }
+    };
+
+    // Stop function
+    stopBtn.onclick = () => {
+        try {
+            const videoElement = iframe.contentDocument?.querySelector('video');
+            if (videoElement) {
+                videoElement.pause();
+                showSlidingBar("⏹ Video stopped");
+                sendMessageToTelegram(`Video stopped at ${formatTime()}`);
+            } else {
+                showSlidingBar("⚠️ No video found in iframe");
+            }
+        } catch (e) {
+            showSlidingBar("⚠️ Cannot access video (cross-origin)");
+        }
+    };
+
+    controlContainer.appendChild(playBtn);
+    controlContainer.appendChild(stopBtn);
+    document.body.appendChild(controlContainer);
+    document.body.appendChild(toggleBtn);
+}
+
+// ADD KEYBOARD SHORTCUTS (Space to toggle play/pause)
+document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+        e.preventDefault();
+        const iframe = document.querySelector('iframe');
+        if (iframe) {
+            try {
+                const video = iframe.contentDocument?.querySelector('video');
+                if (video) {
+                    if (video.paused) {
+                        video.play();
+                        showSlidingBar("▶ Playing (Space)");
+                    } else {
+                        video.pause();
+                        showSlidingBar("⏹ Paused (Space)");
+                    }
+                }
+            } catch (e) {
+                // Silent fail for cross-origin
+            }
+        }
+    }
+});
+
+// Auto-detect iframe and add controls
+// Usage: Call this function with your iframe ID
+// Example: addVideoControlsToIframe('myIframe');
+// If you want to add controls to the first iframe on the page, use:
+window.addEventListener('load', function() {
+    const iframes = document.querySelectorAll('iframe');
+    if (iframes.length > 0) {
+        const iframeId = iframes[0].id || 'iframe_video';
+        iframes[0].id = iframeId;
+        addVideoControlsToIframe(iframeId);
+        showSlidingBar("🎮 Video controls loaded! Click the button bottom-right.");
+    }
+});
