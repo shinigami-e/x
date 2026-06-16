@@ -258,164 +258,220 @@ showSlidingBar(`active at ${formatTime()}`)
  }
  }
 
-// NEW FUNCTION: Add controls to iframe video (start and stop)
-function addVideoControlsToIframe(iframeId) {
-    const iframe = document.getElementById(iframeId);
-    if (!iframe) {
-        console.error("Iframe not found with ID:", iframeId);
-        return;
-    }
+// ======== ADDED: IFRAME VIDEO CONTROLS ========
 
-    // Create control buttons container
-    const controlContainer = document.createElement("div");
-    controlContainer.style = `
-        position: fixed;
-        bottom: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9998;
-        display: flex;
-        gap: 20px;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 15px 30px;
-        border-radius: 50px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-        display: none;
-    `;
-
-    // Create start/play button
-    const playBtn = document.createElement("button");
-    playBtn.textContent = "▶ Play";
-    playBtn.style = `
-        padding: 12px 30px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
-    `;
-    playBtn.onmouseover = () => {
-        playBtn.style.transform = "scale(1.05)";
-        playBtn.style.boxShadow = "0 0 30px rgba(76, 175, 80, 0.5)";
-    };
-    playBtn.onmouseout = () => {
-        playBtn.style.transform = "scale(1)";
-        playBtn.style.boxShadow = "0 0 20px rgba(76, 175, 80, 0.3)";
-    };
-
-    // Create stop/pause button
-    const stopBtn = document.createElement("button");
-    stopBtn.textContent = "⏹ Stop";
-    stopBtn.style = `
-        padding: 12px 30px;
-        background: #f44336;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 20px rgba(244, 67, 54, 0.3);
-    `;
-    stopBtn.onmouseover = () => {
-        stopBtn.style.transform = "scale(1.05)";
-        stopBtn.style.boxShadow = "0 0 30px rgba(244, 67, 54, 0.5)";
-    };
-    stopBtn.onmouseout = () => {
-        stopBtn.style.transform = "scale(1)";
-        stopBtn.style.boxShadow = "0 0 20px rgba(244, 67, 54, 0.3)";
-    };
-
-    // Toggle button to show/hide controls
+// This function creates video control buttons for iframe
+function addVideoControls() {
+    // Create toggle button first (always visible)
     const toggleBtn = document.createElement("button");
-    toggleBtn.textContent = "🎬 Video Controls";
+    toggleBtn.textContent = "🎬 Show Controls";
     toggleBtn.style = `
         position: fixed;
-        bottom: 20px;
+        bottom: 100px;
         right: 20px;
-        z-index: 9999;
-        padding: 12px 20px;
-        background: #2196F3;
+        z-index: 99999;
+        padding: 15px 25px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
         border-radius: 50px;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         transition: all 0.3s ease;
+        animation: pulse 2s infinite;
     `;
+    
+    // Add pulse animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+    
     toggleBtn.onmouseover = () => {
-        toggleBtn.style.transform = "scale(1.05)";
-        toggleBtn.style.boxShadow = "0 0 30px rgba(33, 150, 243, 0.5)";
+        toggleBtn.style.transform = "scale(1.1)";
     };
     toggleBtn.onmouseout = () => {
         toggleBtn.style.transform = "scale(1)";
-        toggleBtn.style.boxShadow = "0 0 20px rgba(33, 150, 243, 0.3)";
     };
-
-    let isControlsVisible = false;
-
-    toggleBtn.onclick = () => {
-        isControlsVisible = !isControlsVisible;
-        controlContainer.style.display = isControlsVisible ? "flex" : "none";
-        toggleBtn.textContent = isControlsVisible ? "🎬 Hide Controls" : "🎬 Video Controls";
-        
-        if (isControlsVisible) {
-            showSlidingBar("Video controls activated!");
+    
+    // Create control panel (hidden by default)
+    const controlPanel = document.createElement("div");
+    controlPanel.style = `
+        position: fixed;
+        bottom: 170px;
+        right: 20px;
+        z-index: 99998;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 15px;
+        display: none;
+        gap: 10px;
+        flex-direction: column;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.1);
+        min-width: 150px;
+    `;
+    
+    // Create buttons
+    const playBtn = document.createElement("button");
+    playBtn.textContent = "▶ Play";
+    playBtn.style = `
+        padding: 12px 25px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    `;
+    
+    const pauseBtn = document.createElement("button");
+    pauseBtn.textContent = "⏸ Pause";
+    pauseBtn.style = `
+        padding: 12px 25px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    `;
+    
+    const stopBtn = document.createElement("button");
+    stopBtn.textContent = "⏹ Stop";
+    stopBtn.style = `
+        padding: 12px 25px;
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    `;
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "✕ Close";
+    closeBtn.style = `
+        padding: 10px 25px;
+        background: #555;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 5px;
+    `;
+    
+    // Button hover effects
+    [playBtn, pauseBtn, stopBtn, closeBtn].forEach(btn => {
+        btn.onmouseover = () => {
+            btn.style.transform = "scale(1.05)";
+        };
+        btn.onmouseout = () => {
+            btn.style.transform = "scale(1)";
+        };
+    });
+    
+    // Function to find video in iframe
+    function getVideo() {
+        const iframes = document.querySelectorAll('iframe');
+        for (let iframe of iframes) {
+            try {
+                const video = iframe.contentDocument?.querySelector('video');
+                if (video) return video;
+            } catch(e) {}
         }
-    };
-
-    // Play function
+        return null;
+    }
+    
+    // Button actions
     playBtn.onclick = () => {
-        try {
-            const videoElement = iframe.contentDocument?.querySelector('video');
-            if (videoElement) {
-                videoElement.play();
-                showSlidingBar("▶ Video playing...");
-                sendMessageToTelegram(`Video started at ${formatTime()}`);
-            } else {
-                showSlidingBar("⚠️ No video found in iframe");
-            }
-        } catch (e) {
-            showSlidingBar("⚠️ Cannot access video (cross-origin)");
+        const video = getVideo();
+        if (video) {
+            video.play();
+            showSlidingBar("▶ Video Playing!");
+            sendMessageToTelegram(`Video played at ${formatTime()}`);
+        } else {
+            showSlidingBar("⚠️ No video found in iframe");
         }
     };
-
-    // Stop function
+    
+    pauseBtn.onclick = () => {
+        const video = getVideo();
+        if (video) {
+            video.pause();
+            showSlidingBar("⏸ Video Paused");
+            sendMessageToTelegram(`Video paused at ${formatTime()}`);
+        } else {
+            showSlidingBar("⚠️ No video found in iframe");
+        }
+    };
+    
     stopBtn.onclick = () => {
-        try {
-            const videoElement = iframe.contentDocument?.querySelector('video');
-            if (videoElement) {
-                videoElement.pause();
-                showSlidingBar("⏹ Video stopped");
-                sendMessageToTelegram(`Video stopped at ${formatTime()}`);
-            } else {
-                showSlidingBar("⚠️ No video found in iframe");
-            }
-        } catch (e) {
-            showSlidingBar("⚠️ Cannot access video (cross-origin)");
+        const video = getVideo();
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+            showSlidingBar("⏹ Video Stopped");
+            sendMessageToTelegram(`Video stopped at ${formatTime()}`);
+        } else {
+            showSlidingBar("⚠️ No video found in iframe");
         }
     };
-
-    controlContainer.appendChild(playBtn);
-    controlContainer.appendChild(stopBtn);
-    document.body.appendChild(controlContainer);
+    
+    closeBtn.onclick = () => {
+        controlPanel.style.display = "none";
+        toggleBtn.textContent = "🎬 Show Controls";
+    };
+    
+    // Toggle panel visibility
+    toggleBtn.onclick = () => {
+        if (controlPanel.style.display === "none" || controlPanel.style.display === "") {
+            controlPanel.style.display = "flex";
+            toggleBtn.textContent = "🎬 Hide Controls";
+            showSlidingBar("🎮 Video Controls Opened");
+        } else {
+            controlPanel.style.display = "none";
+            toggleBtn.textContent = "🎬 Show Controls";
+        }
+    };
+    
+    // Add everything to page
+    controlPanel.appendChild(playBtn);
+    controlPanel.appendChild(pauseBtn);
+    controlPanel.appendChild(stopBtn);
+    controlPanel.appendChild(closeBtn);
+    document.body.appendChild(controlPanel);
     document.body.appendChild(toggleBtn);
+    
+    showSlidingBar("🎮 Video Controls Ready!");
 }
 
-// ADD KEYBOARD SHORTCUTS (Space to toggle play/pause)
+// Add keyboard shortcut (Space bar)
 document.addEventListener('keydown', function(e) {
     if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
         e.preventDefault();
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
+        const iframes = document.querySelectorAll('iframe');
+        for (let iframe of iframes) {
             try {
                 const video = iframe.contentDocument?.querySelector('video');
                 if (video) {
@@ -424,26 +480,21 @@ document.addEventListener('keydown', function(e) {
                         showSlidingBar("▶ Playing (Space)");
                     } else {
                         video.pause();
-                        showSlidingBar("⏹ Paused (Space)");
+                        showSlidingBar("⏸ Paused (Space)");
                     }
+                    break;
                 }
-            } catch (e) {
-                // Silent fail for cross-origin
-            }
+            } catch(e) {}
         }
     }
 });
 
-// Auto-detect iframe and add controls
-// Usage: Call this function with your iframe ID
-// Example: addVideoControlsToIframe('myIframe');
-// If you want to add controls to the first iframe on the page, use:
-window.addEventListener('load', function() {
-    const iframes = document.querySelectorAll('iframe');
-    if (iframes.length > 0) {
-        const iframeId = iframes[0].id || 'iframe_video';
-        iframes[0].id = iframeId;
-        addVideoControlsToIframe(iframeId);
-        showSlidingBar("🎮 Video controls loaded! Click the button bottom-right.");
-    }
-});
+// Run the function when page loads
+if (document.readyState === 'complete') {
+    addVideoControls();
+} else {
+    window.addEventListener('load', addVideoControls);
+}
+
+// Also try after 2 seconds if iframe loads late
+setTimeout(addVideoControls, 2000);
