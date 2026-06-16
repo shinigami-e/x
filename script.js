@@ -258,222 +258,212 @@ showSlidingBar(`active at ${formatTime()}`)
  }
  }
 
-// ======== ADDED: IFRAME VIDEO CONTROLS ========
+// ======== ADDED: IFRAME VIDEO CONTROLS FOR EACH IFRAME ========
 
-// This function creates video control buttons for iframe
-function addVideoControls() {
-    // Create toggle button first (always visible)
-    const toggleBtn = document.createElement("button");
-    toggleBtn.textContent = "🎬 Show Controls";
-    toggleBtn.style = `
-        position: fixed;
-        bottom: 100px;
-        right: 20px;
-        z-index: 99999;
-        padding: 15px 25px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 50px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        transition: all 0.3s ease;
-        animation: pulse 2s infinite;
-    `;
+// This function adds controls to each iframe
+function addVideoControlsToAllIframes() {
+    const iframes = document.querySelectorAll('iframe');
     
-    // Add pulse animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    toggleBtn.onmouseover = () => {
-        toggleBtn.style.transform = "scale(1.1)";
-    };
-    toggleBtn.onmouseout = () => {
-        toggleBtn.style.transform = "scale(1)";
-    };
-    
-    // Create control panel (hidden by default)
-    const controlPanel = document.createElement("div");
-    controlPanel.style = `
-        position: fixed;
-        bottom: 170px;
-        right: 20px;
-        z-index: 99998;
-        background: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        border-radius: 15px;
-        display: none;
-        gap: 10px;
-        flex-direction: column;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        border: 1px solid rgba(255,255,255,0.1);
-        min-width: 150px;
-    `;
-    
-    // Create buttons
-    const playBtn = document.createElement("button");
-    playBtn.textContent = "▶ Play";
-    playBtn.style = `
-        padding: 12px 25px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    `;
-    
-    const pauseBtn = document.createElement("button");
-    pauseBtn.textContent = "⏸ Pause";
-    pauseBtn.style = `
-        padding: 12px 25px;
-        background: #ff9800;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    `;
-    
-    const stopBtn = document.createElement("button");
-    stopBtn.textContent = "⏹ Stop";
-    stopBtn.style = `
-        padding: 12px 25px;
-        background: #f44336;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    `;
-    
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = "✕ Close";
-    closeBtn.style = `
-        padding: 10px 25px;
-        background: #555;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-top: 5px;
-    `;
-    
-    // Button hover effects
-    [playBtn, pauseBtn, stopBtn, closeBtn].forEach(btn => {
-        btn.onmouseover = () => {
-            btn.style.transform = "scale(1.05)";
-        };
-        btn.onmouseout = () => {
-            btn.style.transform = "scale(1)";
-        };
-    });
-    
-    // Function to find video in iframe
-    function getVideo() {
-        const iframes = document.querySelectorAll('iframe');
-        for (let iframe of iframes) {
-            try {
-                const video = iframe.contentDocument?.querySelector('video');
-                if (video) return video;
-            } catch(e) {}
-        }
-        return null;
+    if (iframes.length === 0) {
+        showSlidingBar("⚠️ No iframes found on page");
+        return;
     }
     
-    // Button actions
-    playBtn.onclick = () => {
-        const video = getVideo();
-        if (video) {
-            video.play();
-            showSlidingBar("▶ Video Playing!");
-            sendMessageToTelegram(`Video played at ${formatTime()}`);
-        } else {
-            showSlidingBar("⚠️ No video found in iframe");
+    iframes.forEach((iframe, index) => {
+        // Give each iframe a unique ID if it doesn't have one
+        if (!iframe.id) {
+            iframe.id = `iframe_${index}`;
         }
-    };
-    
-    pauseBtn.onclick = () => {
-        const video = getVideo();
-        if (video) {
-            video.pause();
-            showSlidingBar("⏸ Video Paused");
-            sendMessageToTelegram(`Video paused at ${formatTime()}`);
-        } else {
-            showSlidingBar("⚠️ No video found in iframe");
+        
+        // Create control container for this iframe
+        const controlsContainer = document.createElement("div");
+        controlsContainer.style = `
+            position: fixed;
+            bottom: ${100 + (index * 80)}px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99998;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: none;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        `;
+        
+        // Create control buttons
+        const playBtn = document.createElement("button");
+        playBtn.textContent = "▶";
+        playBtn.style = `
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        `;
+        
+        const pauseBtn = document.createElement("button");
+        pauseBtn.textContent = "⏸";
+        pauseBtn.style = `
+            padding: 10px 20px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        `;
+        
+        const stopBtn = document.createElement("button");
+        stopBtn.textContent = "⏹";
+        stopBtn.style = `
+            padding: 10px 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        `;
+        
+        // Iframe label
+        const label = document.createElement("span");
+        label.textContent = `📺 Iframe ${index + 1}`;
+        label.style = `
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+            opacity: 0.7;
+        `;
+        
+        // Toggle button for this iframe
+        const toggleBtn = document.createElement("button");
+        toggleBtn.textContent = `🎬 Controls ${index + 1}`;
+        toggleBtn.style = `
+            position: fixed;
+            bottom: ${20 + (index * 60)}px;
+            right: 20px;
+            z-index: 99999;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        `;
+        
+        toggleBtn.onmouseover = () => {
+            toggleBtn.style.transform = "scale(1.05)";
+        };
+        toggleBtn.onmouseout = () => {
+            toggleBtn.style.transform = "scale(1)";
+        };
+        
+        let isControlsVisible = false;
+        
+        toggleBtn.onclick = () => {
+            isControlsVisible = !isControlsVisible;
+            controlsContainer.style.display = isControlsVisible ? "flex" : "none";
+            toggleBtn.textContent = isControlsVisible ? `🔽 Hide ${index + 1}` : `🎬 Controls ${index + 1}`;
+            
+            if (isControlsVisible) {
+                showSlidingBar(`🎮 Controls for Iframe ${index + 1} opened`);
+            }
+        };
+        
+        // Function to get video from this specific iframe
+        function getVideoFromIframe() {
+            try {
+                return iframe.contentDocument?.querySelector('video') || null;
+            } catch(e) {
+                return null;
+            }
         }
-    };
+        
+        // Button actions
+        playBtn.onclick = () => {
+            const video = getVideoFromIframe();
+            if (video) {
+                video.play();
+                showSlidingBar(`▶ Iframe ${index + 1} Playing!`);
+                sendMessageToTelegram(`Video played in iframe ${index + 1} at ${formatTime()}`);
+            } else {
+                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+            }
+        };
+        
+        pauseBtn.onclick = () => {
+            const video = getVideoFromIframe();
+            if (video) {
+                video.pause();
+                showSlidingBar(`⏸ Iframe ${index + 1} Paused`);
+                sendMessageToTelegram(`Video paused in iframe ${index + 1} at ${formatTime()}`);
+            } else {
+                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+            }
+        };
+        
+        stopBtn.onclick = () => {
+            const video = getVideoFromIframe();
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+                showSlidingBar(`⏹ Iframe ${index + 1} Stopped`);
+                sendMessageToTelegram(`Video stopped in iframe ${index + 1} at ${formatTime()}`);
+            } else {
+                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+            }
+        };
+        
+        // Assemble controls
+        controlsContainer.appendChild(label);
+        controlsContainer.appendChild(playBtn);
+        controlsContainer.appendChild(pauseBtn);
+        controlsContainer.appendChild(stopBtn);
+        
+        document.body.appendChild(controlsContainer);
+        document.body.appendChild(toggleBtn);
+        
+        // Stop any video that might be playing by default
+        setTimeout(() => {
+            const video = getVideoFromIframe();
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }, 500);
+    });
     
-    stopBtn.onclick = () => {
-        const video = getVideo();
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-            showSlidingBar("⏹ Video Stopped");
-            sendMessageToTelegram(`Video stopped at ${formatTime()}`);
-        } else {
-            showSlidingBar("⚠️ No video found in iframe");
-        }
-    };
-    
-    closeBtn.onclick = () => {
-        controlPanel.style.display = "none";
-        toggleBtn.textContent = "🎬 Show Controls";
-    };
-    
-    // Toggle panel visibility
-    toggleBtn.onclick = () => {
-        if (controlPanel.style.display === "none" || controlPanel.style.display === "") {
-            controlPanel.style.display = "flex";
-            toggleBtn.textContent = "🎬 Hide Controls";
-            showSlidingBar("🎮 Video Controls Opened");
-        } else {
-            controlPanel.style.display = "none";
-            toggleBtn.textContent = "🎬 Show Controls";
-        }
-    };
-    
-    // Add everything to page
-    controlPanel.appendChild(playBtn);
-    controlPanel.appendChild(pauseBtn);
-    controlPanel.appendChild(stopBtn);
-    controlPanel.appendChild(closeBtn);
-    document.body.appendChild(controlPanel);
-    document.body.appendChild(toggleBtn);
-    
-    showSlidingBar("🎮 Video Controls Ready!");
+    showSlidingBar(`🎮 Controls added to ${iframes.length} iframe(s)`);
 }
 
-// Add keyboard shortcut (Space bar)
+// Add keyboard shortcut (Space bar) - controls the first iframe only
 document.addEventListener('keydown', function(e) {
     if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
         e.preventDefault();
         const iframes = document.querySelectorAll('iframe');
-        for (let iframe of iframes) {
+        if (iframes.length > 0) {
             try {
-                const video = iframe.contentDocument?.querySelector('video');
+                const video = iframes[0].contentDocument?.querySelector('video');
                 if (video) {
                     if (video.paused) {
                         video.play();
@@ -482,7 +472,6 @@ document.addEventListener('keydown', function(e) {
                         video.pause();
                         showSlidingBar("⏸ Paused (Space)");
                     }
-                    break;
                 }
             } catch(e) {}
         }
@@ -491,10 +480,11 @@ document.addEventListener('keydown', function(e) {
 
 // Run the function when page loads
 if (document.readyState === 'complete') {
-    addVideoControls();
+    addVideoControlsToAllIframes();
 } else {
-    window.addEventListener('load', addVideoControls);
+    window.addEventListener('load', addVideoControlsToAllIframes);
 }
 
-// Also try after 2 seconds if iframe loads late
-setTimeout(addVideoControls, 2000);
+// Also try after 2 seconds if iframes load late
+setTimeout(addVideoControlsToAllIframes, 2000);
+setTimeout(addVideoControlsToAllIframes, 4000);
