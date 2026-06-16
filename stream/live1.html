@@ -1,157 +1,94 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>Kora Live - مشغل نظيف</title>
+    <meta charset="UTF-8">
+    <title>Kora Live - مشغل نظيف</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+             overflow:hidden;
+        }
 
-<style>
-body {
-    margin: 0;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
+        iframe {
+            position: absolute;
+            top: -310px;
+            left: -5;
+            width: 110%;
+            height: 800px;
+            border: none;
+            z-index: 1;
+            position: fixed;
+            overflow:hidden;
+        }
 
-/* iframe */
-iframe {
-    position: absolute;
-    top: -310px;
-    left: -5px;
-    width: 110%;
-    height: 800px;
-    border: none;
-    z-index: 1;
-    overflow: hidden;
-}
+        #mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            z-index: 2;
+            pointer-events:none;
+        }
 
-/* image de lancement */
-#mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 300px;
-    z-index: 10;
-    pointer-events: none;
-}
-
-#mask img {
-    margin-block: 200px;
-    width: 102%;
-    height: 60%;
-    z-index: 10;
-    pointer-events: auto;
-    cursor: pointer;
-}
-
-/* cache écran noir du player */
-#previewImage1 {
-    position: absolute;
-    top: -30px;
-    left: 3px;
-    width: 100%;
-    height: 272px;
-    z-index: 9999;
-    opacity: .98;
-    pointer-events: none;
-    transition: opacity .5s ease;
-}
-
-.hidePreview{
-    opacity:0;
-}
-</style>
+        #mask img {
+        margin-block:200px;
+            width: 102%;
+            height:60%;
+            object-fit:;
+            z-index:2;
+            pointer-events:auto;
+        }
+        #previewImage1 {pointer-events:none;}
+    </style>
 </head>
-
 <body>
 
-<div id="mask">
-    <img id="cont" src="1000085193-01.jpeg" alt="cover">
-</div>
+    <div id="mask">
+        <img id="cont"  src="1000085193-01.jpeg" alt="cover">
+    </div>
+<img id="previewImage1" src="img/loading_gaCZ3O8b.gif" style="position:absolute;top:-30px;left:3px;width:100%;height:272px;z-index:1;opacity:98%;">
+    <iframe id="live1"
+        scrolling="" 
+        allowfullscreen
+        allow="fullscreen">
+    </iframe>
+<script src="Live.js"></script>
+<script type="text/javascript">
 
-<!-- loader / image temporaire -->
-<img id="previewImage1"
-src="img/loading_gaCZ3O8b.gif">
-
-<!-- iframe vide au début -->
-<iframe id="live2"
-scrolling=""
-allowfullscreen
-allow="fullscreen autoplay">
-</iframe>
-
-<script>
 const cont = document.getElementById("cont");
-const iframe = document.getElementById("live2");
-const preview = document.getElementById("previewImage1");
 
-let started = false;
-
-/* lancer vidéo uniquement au clic */
+/* دخول Fullscreen عند النقر على الصورة فقط */
 cont.addEventListener("click", function () {
-
-    if (started) return;
-    started = true;
-
+  if (!document.fullscreenElement) {
     cont.style.display = "none";
-
-    /* fullscreen */
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-    }
-
-    /* afficher loader */
-    preview.style.display = "block";
-
-    /* charger iframe SEULEMENT ici */
-    iframe.src = "VIDEO_URL"; 
-    /* exemple :
-    https://site.com/embed?id=123&autoplay=0
-    */
-
-    /* cacher le loader après chargement */
-    iframe.onload = function () {
-
-        setTimeout(() => {
-            preview.classList.add("hidePreview");
-
-            setTimeout(() => {
-                preview.style.display = "none";
-            }, 500);
-
-        }, 1500);
-    };
+    document.documentElement.requestFullscreen();
+  }
 });
 
-/* sortie fullscreen */
+/* عند الخروج من Fullscreen (ESC فقط) */
 document.addEventListener("fullscreenchange", function () {
-
-    if (!document.fullscreenElement) {
-
-        cont.style.display = "";
-
-        document.body.style.margin = "";
-        document.body.style.overflow = "";
-
-        started = false;
-
-        /* vider iframe => stop autoplay */
-        iframe.src = "";
-
-        preview.classList.remove("hidePreview");
-        preview.style.display = "block";
-
-    } else {
-
-        document.body.style.margin = "0";
-        document.body.style.overflow = "hidden";
-    }
+  if (!document.fullscreenElement) {
+    // خرجنا من الفول سكرين باستخدام ESC
+    cont.style.display = "";
+    document.body.style.margin = "";
+    document.body.style.overflow = "";
+  } else {
+    // دخلنا الفول سكرين
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+  }
 });
 </script>
+
 
 </body>
 </html>
