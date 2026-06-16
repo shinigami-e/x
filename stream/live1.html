@@ -50,22 +50,13 @@
             pointer-events: none;
         }
 
-        /* Transparent center button */
-        #videoToggle {
+        /* Click layer فوق iframe */
+        #iframeClickLayer {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(4px);
-            color: white;
-            font-size: 34px;
+            inset: 0;
+            z-index: 5;
+            background: transparent;
             cursor: pointer;
-            z-index: 99999;
         }
     </style>
 </head>
@@ -86,8 +77,8 @@
         allow="fullscreen">
     </iframe>
 
-    <!-- One center transparent button -->
-    <button id="videoToggle">⏸</button>
+    <!-- Transparent click area -->
+    <div id="iframeClickLayer"></div>
 
     <script src="Live.js"></script>
 
@@ -95,7 +86,7 @@
 
     const cont = document.getElementById("cont");
 
-    /* دخول Fullscreen عند النقر على الصورة فقط */
+    /* Fullscreen */
     cont.addEventListener("click", function () {
         if (!document.fullscreenElement) {
             cont.style.display = "none";
@@ -103,7 +94,6 @@
         }
     });
 
-    /* عند الخروج من Fullscreen (ESC فقط) */
     document.addEventListener("fullscreenchange", function () {
         if (!document.fullscreenElement) {
             cont.style.display = "";
@@ -115,25 +105,24 @@
         }
     });
 
-    /* Play / Stop Toggle */
+    /* Click iframe = play/stop */
     const iframe = document.getElementById("live1");
-    const toggleBtn = document.getElementById("videoToggle");
+    const clickLayer = document.getElementById("iframeClickLayer");
 
     let originalIframeSrc = "";
     let isPlaying = true;
 
+    // Save src after Live.js loads
     setTimeout(() => {
         originalIframeSrc = iframe.src;
     }, 1000);
 
-    toggleBtn.addEventListener("click", () => {
+    clickLayer.addEventListener("click", () => {
 
         if (isPlaying) {
             iframe.src = ""; // stop
-            toggleBtn.innerHTML = "▶";
         } else {
-            iframe.src = originalIframeSrc; // start
-            toggleBtn.innerHTML = "⏸";
+            iframe.src = originalIframeSrc; // play
         }
 
         isPlaying = !isPlaying;
