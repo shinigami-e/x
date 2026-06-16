@@ -258,140 +258,105 @@ showSlidingBar(`active at ${formatTime()}`)
  }
  }
 
-// ======== ADDED: IFRAME VIDEO CONTROLS FOR EACH IFRAME ========
+// ======== AJOUT SIMPLE: CONTRÔLES POUR CHAQUE IFRAME ========
 
-// This function adds controls to each iframe
-function addVideoControlsToAllIframes() {
-    const iframes = document.querySelectorAll('iframe');
+// Fonction simple pour ajouter des contrôles à chaque iframe
+function ajouterControlesIframe() {
+    // Récupérer tous les iframes
+    var iframes = document.querySelectorAll('iframe');
     
     if (iframes.length === 0) {
-        showSlidingBar("⚠️ No iframes found on page");
         return;
     }
     
-    iframes.forEach((iframe, index) => {
-        // Give each iframe a unique ID if it doesn't have one
-        if (!iframe.id) {
-            iframe.id = `iframe_${index}`;
-        }
-        
-        // Create control container for this iframe
-        const controlsContainer = document.createElement("div");
-        controlsContainer.style = `
-            position: fixed;
-            bottom: ${100 + (index * 80)}px;
+    // Pour chaque iframe
+    iframes.forEach(function(iframe, index) {
+        // Créer le conteneur de contrôles
+        var controls = document.createElement('div');
+        controls.style.cssText = `
+            position: absolute;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            z-index: 99998;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 15px 25px;
-            border-radius: 15px;
-            display: none;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: flex;
             gap: 10px;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.7);
+            padding: 10px 15px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            pointer-events: none;
         `;
         
-        // Create control buttons
-        const playBtn = document.createElement("button");
-        playBtn.textContent = "▶";
-        playBtn.style = `
-            padding: 10px 20px;
+        // Créer les boutons
+        var play = document.createElement('button');
+        play.textContent = '▶';
+        play.style.cssText = `
+            padding: 8px 16px;
             background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 60px;
+            font-size: 14px;
+            font-weight: bold;
+            pointer-events: auto;
+            transition: 0.3s;
         `;
         
-        const pauseBtn = document.createElement("button");
-        pauseBtn.textContent = "⏸";
-        pauseBtn.style = `
-            padding: 10px 20px;
-            background: #ff9800;
+        var pause = document.createElement('button');
+        pause.textContent = '⏸';
+        pause.style.cssText = `
+            padding: 8px 16px;
+            background: #FF9800;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 60px;
+            font-size: 14px;
+            font-weight: bold;
+            pointer-events: auto;
+            transition: 0.3s;
         `;
         
-        const stopBtn = document.createElement("button");
-        stopBtn.textContent = "⏹";
-        stopBtn.style = `
-            padding: 10px 20px;
+        var stop = document.createElement('button');
+        stop.textContent = '⏹';
+        stop.style.cssText = `
+            padding: 8px 16px;
             background: #f44336;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 60px;
-        `;
-        
-        // Iframe label
-        const label = document.createElement("span");
-        label.textContent = `📺 Iframe ${index + 1}`;
-        label.style = `
-            color: white;
             font-size: 14px;
             font-weight: bold;
-            margin-right: 10px;
-            opacity: 0.7;
+            pointer-events: auto;
+            transition: 0.3s;
         `;
         
-        // Toggle button for this iframe
-        const toggleBtn = document.createElement("button");
-        toggleBtn.textContent = `🎬 Controls ${index + 1}`;
-        toggleBtn.style = `
-            position: fixed;
-            bottom: ${20 + (index * 60)}px;
-            right: 20px;
-            z-index: 99999;
-            padding: 10px 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-        `;
+        // Effets hover
+        play.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
+        play.onmouseout = function() { this.style.transform = 'scale(1)'; };
+        pause.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
+        pause.onmouseout = function() { this.style.transform = 'scale(1)'; };
+        stop.onmouseover = function() { this.style.transform = 'scale(1.1)'; };
+        stop.onmouseout = function() { this.style.transform = 'scale(1)'; };
         
-        toggleBtn.onmouseover = () => {
-            toggleBtn.style.transform = "scale(1.05)";
-        };
-        toggleBtn.onmouseout = () => {
-            toggleBtn.style.transform = "scale(1)";
-        };
+        // Rendre le parent de l'iframe relatif
+        if (iframe.parentElement) {
+            iframe.parentElement.style.position = 'relative';
+        }
         
-        let isControlsVisible = false;
+        // Ajouter les contrôles
+        controls.appendChild(play);
+        controls.appendChild(pause);
+        controls.appendChild(stop);
         
-        toggleBtn.onclick = () => {
-            isControlsVisible = !isControlsVisible;
-            controlsContainer.style.display = isControlsVisible ? "flex" : "none";
-            toggleBtn.textContent = isControlsVisible ? `🔽 Hide ${index + 1}` : `🎬 Controls ${index + 1}`;
-            
-            if (isControlsVisible) {
-                showSlidingBar(`🎮 Controls for Iframe ${index + 1} opened`);
-            }
-        };
+        // Ajouter après l'iframe
+        iframe.parentNode.insertBefore(controls, iframe.nextSibling);
         
-        // Function to get video from this specific iframe
-        function getVideoFromIframe() {
+        // Fonction pour obtenir la vidéo
+        function getVideo() {
             try {
                 return iframe.contentDocument?.querySelector('video') || null;
             } catch(e) {
@@ -399,92 +364,52 @@ function addVideoControlsToAllIframes() {
             }
         }
         
-        // Button actions
-        playBtn.onclick = () => {
-            const video = getVideoFromIframe();
+        // Actions
+        play.onclick = function() {
+            var video = getVideo();
             if (video) {
                 video.play();
-                showSlidingBar(`▶ Iframe ${index + 1} Playing!`);
-                sendMessageToTelegram(`Video played in iframe ${index + 1} at ${formatTime()}`);
-            } else {
-                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+                showSlidingBar('▶ Iframe ' + (index+1) + ' en lecture');
             }
         };
         
-        pauseBtn.onclick = () => {
-            const video = getVideoFromIframe();
+        pause.onclick = function() {
+            var video = getVideo();
             if (video) {
                 video.pause();
-                showSlidingBar(`⏸ Iframe ${index + 1} Paused`);
-                sendMessageToTelegram(`Video paused in iframe ${index + 1} at ${formatTime()}`);
-            } else {
-                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+                showSlidingBar('⏸ Iframe ' + (index+1) + ' en pause');
             }
         };
         
-        stopBtn.onclick = () => {
-            const video = getVideoFromIframe();
+        stop.onclick = function() {
+            var video = getVideo();
             if (video) {
                 video.pause();
                 video.currentTime = 0;
-                showSlidingBar(`⏹ Iframe ${index + 1} Stopped`);
-                sendMessageToTelegram(`Video stopped in iframe ${index + 1} at ${formatTime()}`);
-            } else {
-                showSlidingBar(`⚠️ No video found in iframe ${index + 1}`);
+                showSlidingBar('⏹ Iframe ' + (index+1) + ' arrêté');
             }
         };
         
-        // Assemble controls
-        controlsContainer.appendChild(label);
-        controlsContainer.appendChild(playBtn);
-        controlsContainer.appendChild(pauseBtn);
-        controlsContainer.appendChild(stopBtn);
-        
-        document.body.appendChild(controlsContainer);
-        document.body.appendChild(toggleBtn);
-        
-        // Stop any video that might be playing by default
-        setTimeout(() => {
-            const video = getVideoFromIframe();
+        // Arrêter la vidéo au chargement
+        setTimeout(function() {
+            var video = getVideo();
             if (video) {
                 video.pause();
                 video.currentTime = 0;
             }
-        }, 500);
+        }, 1000);
     });
-    
-    showSlidingBar(`🎮 Controls added to ${iframes.length} iframe(s)`);
 }
 
-// Add keyboard shortcut (Space bar) - controls the first iframe only
-document.addEventListener('keydown', function(e) {
-    if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
-        e.preventDefault();
-        const iframes = document.querySelectorAll('iframe');
-        if (iframes.length > 0) {
-            try {
-                const video = iframes[0].contentDocument?.querySelector('video');
-                if (video) {
-                    if (video.paused) {
-                        video.play();
-                        showSlidingBar("▶ Playing (Space)");
-                    } else {
-                        video.pause();
-                        showSlidingBar("⏸ Paused (Space)");
-                    }
-                }
-            } catch(e) {}
-        }
-    }
-});
-
-// Run the function when page loads
+// Exécuter après le chargement de la page
 if (document.readyState === 'complete') {
-    addVideoControlsToAllIframes();
+    setTimeout(ajouterControlesIframe, 500);
 } else {
-    window.addEventListener('load', addVideoControlsToAllIframes);
+    window.addEventListener('load', function() {
+        setTimeout(ajouterControlesIframe, 500);
+    });
 }
 
-// Also try after 2 seconds if iframes load late
-setTimeout(addVideoControlsToAllIframes, 2000);
-setTimeout(addVideoControlsToAllIframes, 4000);
+// Réessayer après 2 secondes
+setTimeout(ajouterControlesIframe, 2000);
+setTimeout(ajouterControlesIframe, 4000);
